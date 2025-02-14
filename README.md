@@ -38,7 +38,7 @@ Experiment with model architectures ranging from baseline RNNs to hybrid deep-le
 
 ## Hybrid Model Architecture
 
-![Model Architecture](architecture_diagram.png)
+![Model Architecture](model_architecture.png)
 
 ### Key Components:
 1. **Meteorological Branch**
