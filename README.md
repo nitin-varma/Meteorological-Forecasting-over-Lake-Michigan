@@ -77,15 +77,7 @@ Experiment with model architectures ranging from baseline RNNs to hybrid deep-le
 ---
 
 ## Team
-- Lokesh Balamurugan (Model Architecture)
-- Nitin Sai Varma Indukuri (Data Pipeline)
-- Krishica Gopalakrishnan (Evaluation Framework)
+- [Lokesh Balamurugan](https://www.linkedin.com/in/lokeshvb/)
+- [Nitin Sai Varma Indukuri](https://www.linkedin.com/in/nitin-varma-indukuri/)
+- [Krishica Gopalakrishnan](https://www.linkedin.com/in/krishicagopalakrishnan/)
 
----
-
-## Contact
-For collaboration or inquiries:
-- **Email**: ml-weather-team@university.edu  
-- **GitHub**: [Lake-Michigan-Precipitation](https://github.com/yourorg/Lake-Michigan-Precipitation)
-
-> **Acknowledgments**: NOAA for meteorological data and GOES satellite imagery.
