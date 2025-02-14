@@ -9,28 +9,6 @@ Experiment with model architectures ranging from baseline RNNs to hybrid deep-le
 
 ---
 
-## Folder Structure
-Meteorological-Satellite-Lake-Michigan/
-├── demo_app.py
-├── images/
-│   └── architecture_diagram.png
-├── LICENSE
-├── Notebook_0_Data_Preparation_for_Inference.ipynb
-├── Notebook_1_Inference.ipynb
-├── Notebook_2_EDA.ipynb
-├── Notebook_3_Data_Preprocessing.ipynb
-├── Notebook_4_Baseline_RNN_Model.ipynb
-├── Notebook_5_24H_Hybrid_AutoWeights.ipynb
-├── Notebook_6_24H_Hybrid_ManualWeights.ipynb
-├── Notebook_7_48H_Hybrid_AutoWeights.ipynb
-├── Notebook_8_48H_Hybrid_ManualWeights.ipynb
-├── Notebook_9_72H_Hybrid_AutoWeights_Extended.ipynb
-├── Notebook_10_72H_Hybrid_AutoWeights.ipynb
-├── Notebook_11_72H_Hybrid_ManualWeights_Extended.ipynb
-├── Notebook_12_72H_Hybrid_ManualWeights.ipynb
-└── README.md
----
-
 ## Notebooks Overview
 
 1. **Notebook 0**: Data Preparation for Inference  
