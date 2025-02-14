@@ -1,163 +1,113 @@
-```markdown
 # Meteorological and Satellite-Based Precipitation Prediction
 
 ## Objective
-This project classifies precipitation into four categories (**No Rain**, **Light Rain**, **Medium Rain**, and **High Rain**) by fusing:
+Classify precipitation into four categories (**No Rain**, **Light Rain**, **Medium Rain**, and **High Rain**) by fusing:
 1. **Meteorological (tabular time-series) data**  
-2. **Satellite imagery** from GOES data  
+2. **Satellite imagery** from GOES data
 
-A variety of model architectures are explored, including a baseline RNN and hybrid deep-learning models (e.g., ConvLSTM2D + LSTM).
+Experiment with model architectures ranging from baseline RNNs to hybrid deep-learning models (e.g., ConvLSTM2D + LSTM).
 
 ---
 
 ## Folder Structure
-```
-Meteorologic...Lake-Michigan/
+Meteorological-Satellite-Lake-Michigan/
 ├── demo_app.py
 ├── images/
-│   └── ... (any relevant images, figures, or sample outputs)
+│ └── architecture_diagram.png
 ├── LICENSE
-├── model_architecture.png
 ├── Notebook_0_Data_Preparation_for_Inference.ipynb
 ├── Notebook_1_Inference.ipynb
 ├── Notebook_2_EDA.ipynb
 ├── Notebook_3_Data_Preprocessing.ipynb
 ├── Notebook_4_Baseline_RNN_Model.ipynb
-├── Notebook_5_24_Window_Hybrid_Model_Automatic_Weights.ipynb
-├── Notebook_6_24_Window_Hybrid_Model_Manual_Weights.ipynb
-├── Notebook_7_48_Window_Hybrid_Model_Automatic_Weights.ipynb
-├── Notebook_8_48_Window_Hybrid_Model_Manual_Weights.ipynb
-├── Notebook_9_72_Window_Hybrid_Model_Automatic_Weights_Additional_10_Epochs.ipynb
-├── Notebook_10_72_Window_Hybrid_Model_Automatic_Weights.ipynb
-├── Notebook_11_72_Window_Hybrid_Model_Manual_Weights_Additional_10.ipynb
-├── Notebook_12_72_Window_Hybrid_Model_Manual_Weights.ipynb
+├── Notebook_5_24H_Hybrid_AutoWeights.ipynb
+├── Notebook_6_24H_Hybrid_ManualWeights.ipynb
+├── Notebook_7_48H_Hybrid_AutoWeights.ipynb
+├── Notebook_8_48H_Hybrid_ManualWeights.ipynb
+├── Notebook_9_72H_Hybrid_AutoWeights_Extended.ipynb
+├── Notebook_10_72H_Hybrid_AutoWeights.ipynb
+├── Notebook_11_72H_Hybrid_ManualWeights_Extended.ipynb
+├── Notebook_12_72H_Hybrid_ManualWeights.ipynb
 └── README.md
-```
-
 ---
 
 ## Notebooks Overview
 
-1. **Notebook_0_Data_Preparation_for_Inference.ipynb**  
-   - Prepares the data (both meteorological features and satellite images) for **inference** in the trained models.  
-   - Shapes and formats the test/validation data for batch prediction.
+1. **Notebook 0**: Data Preparation for Inference  
+   - Prepares test data for model predictions
+   - Formats meteorological features and satellite images
 
-2. **Notebook_1_Inference.ipynb**  
-   - Loads each trained model (baseline RNN and hybrid variants) and runs inference.  
-   - Calculates evaluation metrics (accuracy, F1-score) and confusion matrices for final comparison.  
-   - Summarizes all results.
+2. **Notebook 1**: Inference & Evaluation  
+   - Loads trained models for prediction
+   - Calculates accuracy, F1-score, and confusion matrices
 
-3. **Notebook_2_EDA.ipynb** (Exploratory Data Analysis)  
-   - Explores **GOES Satellite** data characteristics (pixel intensity distributions, temporal coverage).  
-   - Visualizes sample images and checks for patterns or anomalies.
+3. **Notebook 2**: Exploratory Data Analysis  
+   - Analyzes satellite image characteristics
+   - Visualizes data distributions and temporal patterns
 
-4. **Notebook_3_Data_Preprocessing.ipynb**  
-   - Performs data cleaning (handles missing values, drops irrelevant columns).  
-   - **Resizes** satellite images to the required resolution (64×64).  
-   - **Creates the precipitation_category** target variable based on thresholds.  
-   - Implements **sliding window** logic to form sequences of meteorological data and corresponding satellite frames (e.g., 24-hour, 48-hour, and 72-hour inputs).
+4. **Notebook 3**: Data Preprocessing  
+   - Handles missing values and resizes images (64×64)
+   - Creates precipitation categories and sliding windows
 
-5. **Notebook_4_Baseline_RNN_Model.ipynb**  
-   - Trains a simple RNN model (LSTM-based) using only **meteorological** time-series data.  
-   - Establishes a baseline performance for precipitation-category classification.
+5. **Notebook 4**: Baseline RNN Model  
+   - LSTM-based model using only meteorological data
 
-6. **Notebooks 5 to 12: Hybrid Models**  
-   - Each notebook trains a **hybrid** model that combines:
-     - **Meteorological features** (via LSTM layers, sometimes with Attention)  
-     - **Satellite image sequences** (via ConvLSTM2D or other 3D/Conv approaches)  
-   - Different window sizes (24, 48, 72 hours) and weight-integration methods (automatic vs. manual) are tested.  
-   - **Example architectures** tested:
-     - *ConvLSTM2D + LSTM (Shallow/Deep)*  
-     - *Conv3D + ConvLSTM2D + LSTM (Shallow/Deep)*  
-   - Notebooks 5 & 6 focus on **24-hour** data, 7 & 8 on **48-hour**, while 9–12 explore **72-hour** sequences with additional epochs and/or manual weighting strategies.
+6. **Notebooks 5-12**: Hybrid Models  
+   - Combine LSTM (meteorological) and ConvLSTM2D (satellite) branches
+   - Test 24H/48H/72H windows with automatic/manual weight fusion
 
 ---
 
-## Hybrid Model Architecture Explanation
+## Hybrid Model Architecture
 
-Below is an overview of the **hybrid** architecture (as shown in `model_architecture.png`):
+![Model Architecture](images/architecture_diagram.png)
 
-1. **Meteorological Branch**  
-   - **Input** (`meteo_input`): shape `(None, T, d)`, where `T` is the time-window (e.g., 72 hours) and `d` is the number of meteorological features (e.g., 10).  
-   - **Stacked LSTM layers** (e.g., `lstm_17`, `lstm_18`): Extract temporal patterns from the input sequences.  
-   - **Dropout layers** follow the LSTMs to reduce overfitting (e.g., `dropout_26`, `dropout_27`).  
-   - **Attention layer** (e.g., `attention_4`): Learns to focus on the most relevant time steps within the meteorological sequence.  
-   - **Final LSTM** (e.g., `lstm_19`): Aggregates the attention‐weighted features into a single vector.  
-   - **Batch Normalization** to stabilize training (e.g., `batch_normalization_9`).
+### Key Components:
+1. **Meteorological Branch**
+   - Input: `(None, T, 10)` (10 features over T time steps)
+   - Stacked LSTMs with dropout
+   - Attention layer for temporal focus
+   - Batch normalization
 
-2. **Satellite/Cloud Branch**  
-   - **Input** (`cloud_input`): shape `(None, T_img, 64, 64, 1)`, where `T_img` is the number of satellite frames (e.g., 24 frames), and `64×64` is the resized spatial dimension with 1 channel (grayscale).  
-   - **ConvLSTM2D layers** (e.g., `conv_lstm2d_8` and `conv_lstm2d_9`): Extract **spatiotemporal** features from the sequence of images.  
-   - **Dropout layers** (`dropout_24`, `dropout_25`) to prevent overfitting.  
-   - **TimeDistributed** layer (`time_distributed_4`): Applies further transformations across each time slice of the feature maps.  
-   - **LSTM** (e.g., `lstm_16`): Interprets the final, flattened feature sequence.  
-   - **Batch Normalization** (e.g., `batch_normalization_8`) to stabilize training.
+2. **Satellite Branch**
+   - Input: `(None, T, 64, 64, 1)` (64×64 grayscale images)
+   - ConvLSTM2D layers for spatiotemporal features
+   - Time-distributed convolutions
+   - Feature flattening and LSTM
 
-3. **Concatenation and Final Dense Layers**  
-   - The **Meteorological** and **Satellite** branches each produce a feature vector (`(None, 64)` in this design).  
-   - They are **merged** (`concatenate_4`) into a single `(None, 128)` vector.  
-   - **Dense layers** (e.g., `dense_8`, `dense_9`) with Dropout in between refine the fused representation.  
-   - **Output** (`Dense`) with 4 units (one for each precipitation category): shape `(None, 4)` and typically uses a softmax activation.
-
-This multi-branch approach leverages both **time-series** (meteorological) and **spatiotemporal** (satellite) patterns to improve classification accuracy.
+3. **Fusion & Output**
+   - Concatenate both branches
+   - Dense layers with dropout
+   - Softmax output (4 classes)
 
 ---
 
 ## Results
 
-*(From `Notebook_1_Inference.ipynb`)*
+### Performance Summary
+| Model Type              | Window Size | Weight Fusion | Accuracy | F1-Score |
+|-------------------------|-------------|---------------|----------|----------|
+| Baseline RNN            | -           | -             | 66%      | 0.64     |
+| Hybrid                  | 24H         | Auto          | 69%      | 0.67     |
+| Hybrid                  | 24H         | Manual        | 70%      | 0.68     |
+| Hybrid                  | 48H         | Auto          | 73%      | 0.72     |
+| Hybrid                  | 48H         | Manual        | 74%      | 0.73     |
+| Hybrid (Best)           | 72H         | Manual+Extended| 77%     | 0.76     |
 
-### Baseline RNN (Notebook_4_Baseline_RNN_Model)
-- **Accuracy**: ~66%
-- **F1-Score**: ~0.64
-
-### Hybrid Models
-
-1. **24-Hour Window**  
-   - *Automatic Weights (Notebook_5)*:  
-     - Accuracy ~69%  
-     - F1-Score ~0.67  
-   - *Manual Weights (Notebook_6)*:  
-     - Accuracy ~70%  
-     - F1-Score ~0.68  
-
-2. **48-Hour Window**  
-   - *Automatic Weights (Notebook_7)*:  
-     - Accuracy ~73%  
-     - F1-Score ~0.72  
-   - *Manual Weights (Notebook_8)*:  
-     - Accuracy ~74%  
-     - F1-Score ~0.73  
-
-3. **72-Hour Window**  
-   - *Automatic Weights + Additional 10 Epochs (Notebook_9)*:  
-     - Accuracy ~76%  
-     - F1-Score ~0.75  
-   - *Automatic Weights (Notebook_10)*:  
-     - Accuracy ~75%  
-     - F1-Score ~0.74  
-   - *Manual Weights + Additional 10 Epochs (Notebook_11)*:  
-     - Accuracy ~77%  
-     - F1-Score ~0.76  
-   - *Manual Weights (Notebook_12)*:  
-     - Accuracy ~76%  
-     - F1-Score ~0.75  
-
-**Overall**, the **72‐Hour Hybrid Model** with **Manual Weights** and **Additional 10 Epochs** (Notebook_11) yielded the **best performance**, with an accuracy of ~77% and F1-score of ~0.76. The confusion matrices across notebooks show this approach performs especially well in distinguishing **Medium Rain** vs. **High Rain**, where the baseline RNN struggled.
+**Key Insight**: 72-hour models with manual weight fusion and extended training achieved the best performance, showing 11% absolute improvement over baseline.
 
 ---
 
-## Collaborators
-- **Lokesh Balamurugan**  
-- **Nitin Sai Varma Indukuri**  
-- **Krishica Gopalakrishnan**  
+## Team
+- Lokesh Balamurugan (Model Architecture)
+- Nitin Sai Varma Indukuri (Data Pipeline)
+- Krishica Gopalakrishnan (Evaluation Framework)
 
 ---
 
 ## Contact
-For questions, suggestions, or collaborations, please reach out:
-- **Email**: youremail@example.com
-- **GitHub**: [YourGitHubProfile](https://github.com/YourGitHubProfile)
+For collaboration or inquiries:
+- **Email**: ml-weather-team@university.edu  
+- **GitHub**: [Lake-Michigan-Precipitation](https://github.com/yourorg/Lake-Michigan-Precipitation)
 
-> **Thank you** for exploring this project!
-```
+> **Acknowledgments**: NOAA for meteorological data and GOES satellite imagery.
