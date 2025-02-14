@@ -13,7 +13,7 @@ Experiment with model architectures ranging from baseline RNNs to hybrid deep-le
 Meteorological-Satellite-Lake-Michigan/
 ├── demo_app.py
 ├── images/
-│ └── architecture_diagram.png
+│   └── architecture_diagram.png
 ├── LICENSE
 ├── Notebook_0_Data_Preparation_for_Inference.ipynb
 ├── Notebook_1_Inference.ipynb
